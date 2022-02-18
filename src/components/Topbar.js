@@ -1,28 +1,25 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { Button, Modal } from "antd";
-import { GoogleOutlined } from '@ant-design/icons'
+import { Button, Divider, Input, Modal } from "antd";
+import { MailOutlined, KeyOutlined } from "@ant-design/icons";
 import { Flex, Box } from "reflexbox";
 import styled from "@emotion/styled";
 
 const StyledModal = styled(Modal)`
   left: calc(100% - 520px);
   margin: 0 !important;
-  top: 0;
+  top: calc(100% - 850px);
   .ant-modal-wrap {
     overflow: hidden !important;
   }
   .ant-modal-content {
-    border-radius: 1px;
+    border-radius: 2px;
   }
 `;
 
 export default function Topbar({ children }) {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-
-
 
   return (
     <>
@@ -35,7 +32,7 @@ export default function Topbar({ children }) {
             >
               <img
                 src="/assets/Logoubu.png"
-                style={{ width: 50, height: 55, margin: 20 }}
+                style={{ width: 50, height: 55, margin: "20px 20px 20px 50px" }}
               />
               <Box style={{ padding: "40px 15px 0px 0px" }}>
                 <h3 style={{ lineHeight: "1px", color: "white" }}>
@@ -48,20 +45,70 @@ export default function Topbar({ children }) {
           <Box width={1 / 2}>
             <Flex justifyContent="end">
               <p
-                style={{ padding: "40px 15px 0px 0px", color: "white", cursor: "pointer" }}
+                style={{
+                  padding: "40px 15px 0px 0px",
+                  color: "white",
+                  cursor: "pointer",
+                }}
                 onClick={() => setIsModalVisible(true)}
               >
-                <strong>Sign in</strong>
+                <strong>Sign In</strong>
               </p>
             </Flex>
           </Box>
         </Flex>
+
+        {/* ---------------- Login ------------------- */}
+
+        
         <StyledModal
           visible={isModalVisible}
           footer={null}
-          onCancel={()=> setIsModalVisible(false)}
+          onCancel={() => setIsModalVisible(false)}
         >
-          <Button type="primary" icon={<GoogleOutlined />} >Google Authentication</Button>
+          <Flex className="contentsHome">
+            <p style={{ fontSize: "24px", color: "#4B4B4B" }}>
+              เข้าใช้งานระบบด้วย
+            </p>
+          </Flex>
+          <Flex className="input-box-login">
+            <Input
+              size="middle"
+              placeholder="Email"
+              prefix={<MailOutlined style={{ color: "#4B4B4B", margin: 5 }} />}
+            />
+          </Flex>
+          <Flex className="input-box-login">
+            <Input.Password
+              size="middle"
+              placeholder="Password"
+              prefix={<KeyOutlined style={{ color: "#4B4B4B", margin: 5 }} />}
+              
+            />
+          </Flex>
+          <Flex className="contentsHome">
+            <Divider> OR </Divider>
+          </Flex>
+          <Flex
+            className="contentsHome"
+            style={{ padding: "10px 10px 10px 10px" }}
+          >
+            <Button className="btn-login-google" >
+              <img
+                src="/assets/google-auth.png"
+                style={{ width: 15, margin: "3px 5px 5px 0px" }}
+              />
+              | Google Authentication
+            </Button>
+          </Flex>
+          <Flex className="contentsHome" style={{ margin: "20px 0px 20px 0px" }}>
+            <Button
+              className="btn-login"
+              style={{ padding: "0px 78px 0px 78px" }}
+            >
+              เข้าสู่ระบบ
+            </Button>
+          </Flex>
         </StyledModal>
       </div>
       {children}
