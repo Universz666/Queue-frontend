@@ -5,15 +5,19 @@ import { MailOutlined, KeyOutlined } from "@ant-design/icons";
 import { Flex, Box } from "reflexbox";
 import styled from "@emotion/styled";
 
+
 const StyledModal = styled(Modal)`
-  left: calc(100% - 520px);
-  margin: 0 !important;
-  top: calc(100% - 850px);
+  position: fixed;
+  width: 600px;
+  top: 300px;
+  left: calc(50% - 250px);
+  bottom: 40px;
+  z-index: 100;
   .ant-modal-wrap {
     overflow: hidden !important;
   }
   .ant-modal-content {
-    border-radius: 2px;
+    border-radius: 5px;
   }
 `;
 
@@ -46,7 +50,7 @@ export default function Topbar({ children }) {
             <Flex justifyContent="end">
               <p
                 style={{
-                  padding: "40px 15px 0px 0px",
+                  padding: "40px 50px 0px 0px",
                   color: "white",
                   cursor: "pointer",
                 }}
@@ -60,7 +64,6 @@ export default function Topbar({ children }) {
 
         {/* ---------------- Login ------------------- */}
 
-        
         <StyledModal
           visible={isModalVisible}
           footer={null}
@@ -83,7 +86,6 @@ export default function Topbar({ children }) {
               size="middle"
               placeholder="Password"
               prefix={<KeyOutlined style={{ color: "#4B4B4B", margin: 5 }} />}
-              
             />
           </Flex>
           <Flex className="contentsHome">
@@ -93,7 +95,7 @@ export default function Topbar({ children }) {
             className="contentsHome"
             style={{ padding: "10px 10px 10px 10px" }}
           >
-            <Button className="btn-login-google" >
+            <Button className="btn-login-google">
               <img
                 src="/assets/google-auth.png"
                 style={{ width: 15, margin: "3px 5px 5px 0px" }}
@@ -101,7 +103,10 @@ export default function Topbar({ children }) {
               | Google Authentication
             </Button>
           </Flex>
-          <Flex className="contentsHome" style={{ margin: "20px 0px 20px 0px" }}>
+          <Flex
+            className="contentsHome"
+            style={{ margin: "20px 0px 20px 0px" }}
+          >
             <Button
               className="btn-login"
               style={{ padding: "0px 78px 0px 78px" }}

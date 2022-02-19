@@ -45,7 +45,7 @@ function RegisterDesktop() {
 
           {/* --------------------------------------register------------------ */}
 
-          <div className="site-content">
+          <div className="site-content" >
             <Flex className="contentsHome" style={{margin:20}}>
               <p className="font-regist">ลงทะเบียน</p>
             </Flex>

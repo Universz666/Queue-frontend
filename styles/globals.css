@@ -15,7 +15,7 @@ body {
 .site-layout-content {
   min-height: 280px;
   padding: 24px;
-  background: #fff;
+  background: rgb(255, 255, 255);
 }
 #components-layout-demo-top .logo {
   float: left;
@@ -114,3 +114,18 @@ body {
   padding: 0px 100px 0px 100px
 }
 
+.card-box-q{
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  color: #fff;
+  color: #fff !important;
+  text-align: center;
+}
+
+
+.txt-q{
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0;
+}
