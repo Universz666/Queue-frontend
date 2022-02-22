@@ -21,7 +21,7 @@ const StyledModal = styled(Modal)`
   }
 `;
 
-export default function Topbar({ children }) {
+export default function Topbar() {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -36,13 +36,13 @@ export default function Topbar({ children }) {
             >
               <img
                 src="/assets/Logoubu.png"
-                style={{ width: 50, height: 55, margin: "20px 20px 20px 50px" }}
+                style={{ width: 60, height: 65, margin: "20px 20px 20px 50px" }}
               />
               <Box style={{ padding: "40px 15px 0px 0px" }}>
-                <h3 style={{ lineHeight: "1px", color: "white" }}>
+                <h3 style={{ lineHeight: "1px", color: "#FFF", fontSize:"24px" }}>
                   มหาวิทยาลัยอุบลราชธานี
                 </h3>
-                <p style={{ color: "white" }}>Ubon Ratchathani University</p>
+                <p style={{ color: "#FFF",  fontSize:"20px" }}>Ubon Ratchathani University</p>
               </Box>
             </Flex>
           </Box>
@@ -53,10 +53,11 @@ export default function Topbar({ children }) {
                   padding: "40px 50px 0px 0px",
                   color: "white",
                   cursor: "pointer",
+                  fontSize: "20px"
                 }}
                 onClick={() => setIsModalVisible(true)}
               >
-                <strong>Sign In</strong>
+                เข้าสู่ระบบ
               </p>
             </Flex>
           </Box>
@@ -116,7 +117,6 @@ export default function Topbar({ children }) {
           </Flex>
         </StyledModal>
       </div>
-      {children}
     </>
   );
 }
