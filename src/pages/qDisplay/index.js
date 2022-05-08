@@ -1,14 +1,41 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import Landing from "../../components/LayoutsLanding";
 import { Flex, Box } from "reflexbox";
-import { Card } from "antd";
+import { Card, Col, Row, Divider, Input, Button } from "antd";
+
 import InfoStd from "../../components/Display/InfoStd";
 
 function qDisplay() {
+  const [messages, setMessages] = useState();
+  const [showTxt, setShowTxt] = useState("");
+
+  let ws = null;
+
+  useEffect(() => {
+    ws = new WebSocket("ws://localhost:8000/ws");
+    let num = 1;
+    setInterval(async () => {
+      console.log("Interva");
+      ws.send("JAMES");
+      console.log("test send");
+      await onmeaage();
+    }, 3000);
+  }, []);
+
+  const onmeaage = () => {
+    ws.onmessage = (event) => {
+      console.log("xx");
+      setShowTxt(event?.data);
+      console.log("WebSocket message received:", event.data);
+    };
+  };
+
+  console.log(messages);
+
   return (
     <>
       <Landing>
-        <Flex>
+        <Flex style={{ background: "#F6F6F6" }}>
           <Box
             style={{
               padding: "10px 20px 0px 50px",
@@ -20,56 +47,62 @@ function qDisplay() {
           </Box>
         </Flex>
 
-        <div className="site-content">
-          <Flex flexDirection="column">
-            <Flex >
-              <Box width={1 / 3} style={{ padding: 20 }}>
-                <Flex className="contentsHome">
-                  <Card
-                    className="card-box-q"
-                    style={{ backgroundColor: "#0B3B7D" }}
-                  >
-                    <p>ผู้เข้าสัมภาษณ์ทั้งหมด</p>
-                    <p className="txt-q">01</p>
-                  </Card>
-                </Flex>
+        <div className="site-card-border-less-wrapper">
+          <Row justify="center">
+            <Col xs={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
+              <Flex className="contentsHome">
+                <Card
+                  className="card-box-q"
+                  style={{ backgroundColor: "#0B3B7D", margin: 20 }}
+                >
+                  <p>ผู้เข้าสัมภาษณ์ทั้งหมด</p>
+                  <p className="txt-q">01</p>
+                </Card>
+              </Flex>
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
+              <Flex className="contentsHome">
+                <Card
+                  className="card-box-q"
+                  style={{ backgroundColor: "#4CAF50", margin: 20 }}
+                >
+                  <p>คิวที่กำลังสัมภาษณ์</p>
+                  <p className="txt-q">01</p>
+                </Card>
+              </Flex>
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }}>
+              <Flex className="contentsHome">
+                <Card
+                  className="card-box-q"
+                  style={{ backgroundColor: "#E7B400", margin: 20 }}
+                >
+                  <p>คิวของคุณ</p>
+                  <p className="txt-q">01</p>
+                  <Divider style={{ backgroundColor: "#fff" }} />
+                  <p>19 Feb 2022</p>
+                  <p style={{ fontSize: "28px" }}>02:30:41</p>
+                  <p>เวลาที่รอโดยประมาณ</p>
+                </Card>
+              </Flex>
+            </Col>
+          </Row>
+        </div>
+        <div className="contentsHome">
+          <Flex>
+            <Box width={1 / 2}>
+              <h2>Test</h2>
+              <Box>
+                <Input onChange={(e) => setMessage(e.target.value)} />
+                <Button>Send</Button>
               </Box>
-              <Box width={1 / 3} style={{ padding: 20 }}>
-                <Flex className="contentsHome">
-                  <Card
-                    className="card-box-q"
-                    style={{ backgroundColor: "#4CAF50" }}
-                  >
-                    <p>คิวที่กำลังสัมภาษณ์</p>
-                    <p className="txt-q">01</p>
-                  </Card>
-                </Flex>
+              <Box>
+                <p>{showTxt}</p>
               </Box>
-              <Box width={1 / 3} style={{ padding: 20 }}>
-                <Flex className="contentsHome">
-                  <Card
-                    className="card-box-q"
-                    style={{ backgroundColor: "#E7B400" }}
-                  >
-                    <p>คิวของคุณ</p>
-                    <p className="txt-q">01</p>
-                  </Card>
-                </Flex>
-                <Flex className="contentsHome">
-                  <Card
-                    className="card-box-q"
-                    style={{ backgroundColor: "#E7B400"}}
-                  >
-                    <p>19 Feb 2022</p>
-                    <p style={{ fontSize: "28px" }}>02:30:41</p>
-                    <p>เวลาที่รอโดยประมาณ</p>
-                  </Card>
-                </Flex>
-              </Box>
-            </Flex>
-            <Flex>
-              <InfoStd />
-            </Flex>
+            </Box>
+          </Flex>
+          <Flex>
+            <p></p>
           </Flex>
         </div>
       </Landing>

@@ -1,23 +1,40 @@
 import { React, useState, useEffect } from "react";
-import Layouts from "../../components/Layouts";
-import { Box, Flex } from "reflexbox";
-import { Input, Menu, Dropdown, Button, Form, Select } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import {
+  Modal,
+  Button,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  TimePicker,
+} from "antd";
+import { Flex, Box } from "reflexbox";
+import styled from "@emotion/styled";
+import Router, { useRouter } from "next/router";
+import useSWR from "swr";
+import { useSession, signIn, signOut } from "next-auth/react";
 
-import { register_Teacher } from "../api";
+import { create_Event } from "../../pages/api";
 
-const { TextArea } = Input;
+const StyledModal = styled(Modal)`
+  position: fixed;
+  width: 600px;
+  top: 300px;
+  left: calc(50% - 250px);
+  bottom: 40px;
+  z-index: 100;
+  .ant-modal-wrap {
+    overflow: hidden !important;
+  }
+  .ant-modal-content {
+    border-radius: 5px;
+  }
+`;
 
-function Dashboard() {
-  const [userdata, setUserdata] = useState();
+function ModalEvent() {
 
-  useEffect(() => {
-    const item = JSON.parse(localStorage.getItem("userData"));
-    // console.log(item)
-    if (item) {
-      setUserdata(item);
-    }
-  }, []);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const router = useRouter();
 
   const { Option } = Select;
   const facultyData = [
@@ -100,10 +117,9 @@ function Dashboard() {
     คณะรัฐศาสตร์: ["หลักสูตรรัฐศาสตรบัณฑิต", "หลักสูตรรัฐประศาสนศาสตรบัณฑิต"],
   };
 
-  const [fullname, setFullname] = useState("");
-  const [phone, setPhone] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
   const [facultys, setFacultys] = useState(facultyData[0]);
+  const [createDate, setCreateDate] = useState();
 
   const [faculties, setFaculties] = useState(majorData[facultyData[0]]);
   const [majorDat, setMajorDat] = useState(majorData[facultyData[0]][0]);
@@ -117,185 +133,126 @@ function Dashboard() {
     setMajorDat(value);
   };
 
-  const handleRegister = async () => {
+  
+
+  const handleCreateEvent = async () => {
+    let datestring =
+      createDate.getFullYear() +
+      "-" +
+      (createDate.getMonth() + 1) +
+      "-" +
+      createDate.getDate() +
+      " " +
+      ("0" + createDate.getHours()).slice(-2) +
+      ":" +
+      ("0" + createDate.getMinutes()).slice(-2) +
+      ":" +
+      ("0" + createDate.getSeconds()).slice(-2);
+
+    let randomPath = require("randomstring").generate(6);
+    
+    let userId = JSON.parse(localStorage.getItem("userData")).id;
     const payLoad = {
-      email: userdata?.email,
-      name: userdata?.name,
-      full_name: fullname,
-      phone: phone,
+      title: title,
       faculty: facultys,
-      majors: majorDat,
-      description: description,
+      major: majorDat,
+      startDate: datestring,
+      CreateByUserID: userId,
+      requrl:randomPath
     };
     console.log(payLoad);
 
     try {
-      await register_Teacher(payLoad).then((respones) => {
+      await create_Event(payLoad).then((respones) => {
         if (respones.status == 200) {
-          console.log("respone ===>", respones);
+          console.log("respone ==>", respones);
         }
+        // setIsModalVisible(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
       });
     } catch (error) {
       console.log("error", error);
     }
   };
 
+
   return (
-    <>
-      <Layouts>
-        <Flex className="contentsHome" style={{ margin: 20 }}>
-          <h2 style={{ fontSize: "24px" }}>อาจารย์ผู้สอบสัมภาษณ์</h2>
-        </Flex>
-
-        <Flex flexDirection="column">
-          <Form name="regist_Queue">
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Form.Item name="email">
-                    <Box>
-                      <p className="font-regist" style={{ color: "#4B4B4B" }}>
-                        {userdata?.email}
-                      </p>
-                    </Box>
-                  </Form.Item>
-                </Flex>
-              </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
-                >
-                  <Form.Item name="authname">
-                    <Box>
-                      <p className="font-regist" style={{ color: "#4B4B4B" }}>
-                        {userdata?.name}
-                      </p>
-                    </Box>
-                  </Form.Item>
-                </Flex>
-              </Box>
-            </Flex>
-
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">ชื่อ-นามสกุล </p>
-                  </Box>
-                  <Form.Item name="full_name">
-                    <Box>
-                      <Input onChange={(e) => setFullname(e.target.value)} />
-                    </Box>
-                  </Form.Item>
-                </Flex>
-              </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
-                >
-                  <Box>
-                    <p className="font-regist">เบอร์โทรศัพท์ </p>
-                  </Box>
-                  <Form.Item name="phone">
-                    <Box>
-                      <Input onChange={(e) => setPhone(e.target.value)} />
-                    </Box>
-                  </Form.Item>
-                </Flex>
-              </Box>
-            </Flex>
-
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">คณะ </p>
-                  </Box>
-                  <Form.Item name="faculty">
-                    <Select
-                      size="middle"
-                      style={{ width: 220 }}
-                      defaultValue={facultyData[0]}
-                      onChange={handleFacultyChange}
-                    >
-                      {facultyData.map((faculty) => (
-                        <Option key={faculty}>{faculty}</Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Flex>
-              </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
-                >
-                  <Box>
-                    <Flex className="input-regist" justifyContent="end">
-                      <Box>
-                        <p className="font-regist">สาขาวิชา </p>
-                      </Box>
-                      <Form.Item>
-                        <Select
-                          size="middle"
-                          style={{ width: 220 }}
-                          value={majorDat}
-                          onChange={onMajorChange}
-                        >
-                          {faculties.map((major) => (
-                            <Option key={major}>{major}</Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Flex>
-                  </Box>
-                </Flex>
-              </Box>
-            </Flex>
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <p className="font-regist">นัดหมายสัมภาษณ์ </p>
-                  <Form.Item name="description">
-                    <Flex>
-                      <TextArea
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={4}
-                        placeholder="สามารถวางลิงก์ได้"
-                      ></TextArea>
-                    </Flex>
-                  </Form.Item>
-                </Flex>
-              </Box>
-            </Flex>
-          </Form>
-        </Flex>
-
-        {/* ---------------------------Submit-------------------------- */}
-
+    <Flex flexDirection="column">
+      <Flex className="contentsHome" style={{ marginTop: 50 }}>
+        <Button
+          className="ant-btn-primary"
+          style={{
+            fontSize: "24px",
+            padding: "0px 40px 38px 40px",
+            marginBottom: 80,
+            alignItems: "center",
+            borderRadius: "10px",
+          }}
+          onClick={() => setIsModalVisible(true) }
+        >
+          Create Event
+        </Button>
+      </Flex>
+      <StyledModal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={() => setIsModalVisible(false)}
+      >
         <Flex className="contentsHome">
-          <Button
-            htmlType="submit"
-            className="btn-teacher-save"
-            style={{
-              fontSize: "24px",
-              padding: "0px 50px 35px 50px",
-              marginTop: 50,
-              borderRadius: "5px",
-            }}
-            onClick={() => handleRegister()}
-          >
-            บันทึก
-          </Button>
+          <p style={{ fontSize: "20px", color: "#4B4B4B" }}>
+            สร้างอีเว้นท์สัมภาษณ์
+          </p>
         </Flex>
-      </Layouts>
-    </>
+        <Form name="create_Event">
+          <Form.Item name="title">
+            <Input
+              size="middle"
+              placeholder="Title"
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item name="faculty">
+            <Select
+              defaultValue={facultyData[0]}
+              onChange={handleFacultyChange}
+            >
+              {facultyData.map((faculty) => (
+                <Option key={faculty}>{faculty}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Select value={majorDat} onChange={onMajorChange}>
+              {faculties.map((major) => (
+                <Option key={major}>{major}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="วันที่และเวลาเริ่มสัมภาษณ์">
+            <Flex>
+              <Box width={1 / 2}>
+                <DatePicker style={{width: '100%'}} showTime onOk={(e) => setCreateDate(new Date(e))} />
+              </Box>
+            </Flex>
+          </Form.Item>
+          <Flex className="contentsHome">
+            <Form.Item>
+              <Button
+                htmlType="submit"
+                className="btn-login"
+                style={{ padding: "0px 78px 0px 78px" }}
+                onClick={() => handleCreateEvent()}
+              >
+                สร้างอีเว้นท์
+              </Button>
+            </Form.Item>
+          </Flex>
+        </Form>
+      </StyledModal>
+    </Flex>
   );
 }
 
-export default Dashboard;
+export default ModalEvent;

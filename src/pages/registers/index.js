@@ -1,183 +1,143 @@
-import React from "react";
-
+import { React, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Landing from "../../components/LayoutsLanding";
 import { Box, Flex } from "reflexbox";
-import { Input, Button, Dropdown, message, Menu } from "antd";
-import {
-  CloudUploadOutlined,
-  NotificationOutlined,
-  DownOutlined,
-} from "@ant-design/icons";
+import { Col, Form, Row, Select, Input, Button, Modal } from "antd";
+
+import { useSession } from "next-auth/react";
+
+import Landing from "../../components/LayoutsLanding";
+import StudentForm from "../../components/UserRegister/studentForm";
+import TeacherForm from "../../components/UserRegister/teacherForm";
+
 
 function RegisterDesktop() {
   const router = useRouter();
 
-  const onChange = (e) => {
-    console.log(e);
+
+
+  const { Option } = Select;
+
+  const [authdata, setAuthdata] = useState();
+
+  const roleData = ["นักเรียน", "อาจารย์"];
+  const [role, setRole] = useState(roleData[0]);
+  const handleRoleChange = (value) => {
+    setRole(value);
   };
+  // console.log(role);
 
-  function handleMenuClick(e) {
-    message.info("Click on item");
-    console.log("clicked", e);
-  }
+  // useEffect(() => {
+  //   const item = JSON.parse(sessionStorage.getItem("authdata"));
+  //   // console.log(item)
+  //   if (item) {
+  //     setAuthdata(item);
+  //   }
+  // }, );
 
-  const faculty = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">SCI</Menu.Item>
-      <Menu.Item key="2">BUS</Menu.Item>
-      <Menu.Item key="3">ENG</Menu.Item>
-      <Menu.Item key="4">AGI</Menu.Item>
-    </Menu>
-  );
+  const { data: session } = useSession();
+  useEffect(() => {
+    if (session) {
+      sessionStorage.setItem("authdata", JSON.stringify(session.user));
+      setAuthdata(session.user);
+    }
+  }, [session?.user]);
 
   return (
     <>
       <Landing>
         <div className="container">
-          <Flex>
-            <Box
-              style={{
-                padding: "10px 20px 0px 50px",
-                fontSize: "24px",
-                color: "#4B4B4B",
-              }}
-            >
-              <p>งานสัมภาษณ์เข้าศึกษาต่อมหาวิทยาลัยอุบลราชธานี</p>
-            </Box>
-          </Flex>
-
-          {/* --------------------------------------register------------------ */}
-
-          <div className="site-content">
-            <Flex className="contentsHome" style={{ margin: 20 }}>
-              <p className="font-regist">ลงทะเบียน</p>
-            </Flex>
-            <Flex flexDirection="column">
+          <Row>
+            <Col span={24}>
               <Flex>
-                <Box width={1/2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">ชื่อ-นามสกุล :</p>
-                  </Box>
-                  <Box>
-                    <Input allowClear onChange={onChange} />
-                  </Box>
-                </Flex>
-                </Box>
-                <Box width={1/2}>
-                <Flex className="input-regist" justifyContent="start" style={{marginLeft:"40px"}}>
-                  <Box >
-                    <p className="font-regist">โรงเรียน :</p>
-                  </Box>
-                  <Box >
-                    <Input allowClear onChange={onChange} />
-                  </Box>
-                </Flex>
-                </Box>
-              </Flex>
-
-              <Flex>
-                <Box width={1/2}> 
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">เบอร์โทรศัพท์ :</p>
-                  </Box>
-                  <Box>
-                    <Input allowClear onChange={onChange} />
-                  </Box>
-                </Flex>
-                </Box>
-                <Box width={1/2}>
-                <Flex className="input-regist" justifyContent="start" style={{marginLeft:"40px"}}>
-                  <Box>
-                    <Button
-                      className="btn-login"
-                      style={{
-                        fontSize: "18px",
-                        borderRadius: "5px",
-                        padding: "0px 10px 0px 10px",
-                      }}
-                    >
-                      <CloudUploadOutlined />
-                      อัพโหลดไฟล์ Portfolio
-                    </Button>
-                  </Box>
-                </Flex>
-                </Box>
-              </Flex>
-              <Flex>
-                <Box width={1/2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">จังหวัด :</p>
-                  </Box>
-                  <Box>
-                    <Input allowClear onChange={onChange} />
-                  </Box>
-                </Flex>
-                </Box>
-                <Box width={1/2}>
-                <Flex className="input-regist" justifyContent="start" style={{marginLeft:"40px"}}>
-                  <Box width={1/2}>
-                    <Button
-                      className="btn-line"
-                      style={{
-                        fontSize: "18px",
-                        borderRadius: "5px",
-                        padding: "0px 15px 0px 15px",
-                      }}
-                    >
-                      <NotificationOutlined />
-                      รับแจ้งเตือนผ่าน LINE
-                    </Button>
-                  </Box>
-                </Flex>
-                </Box>
-              </Flex>
-            </Flex>
-
-            {/* -------------------------------Faculty/Department----------------------- */}
-
-            <Flex className="contentsHome" style={{ marginTop: 40 }}>
-              <p className="font-regist">คณะ/สาขาวิชาที่เข้าสัมภาษณ์</p>
-            </Flex>
-            <Flex className="contentsHome" style={{ margin: 10 }}>
-              <Dropdown overlay={faculty}>
-                <Button
-                  style={{ fontSize: "18px", padding: "0px 150px 0px 150px" }}
+                <Box
+                  style={{
+                    padding: "10px 20px 0px 50px",
+                    fontSize: "24px",
+                    color: "#4B4B4B",
+                  }}
                 >
-                  คณะ <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Flex>
-            <Flex className="contentsHome" style={{ marginBottom: 30 }}>
-              <Dropdown overlay={faculty}>
-                <Button
-                  style={{ fontSize: "18px", padding: "0px 150px 0px 150px" }}
-                >
-                  สาขา <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Flex>
+                  <p>งานสัมภาษณ์เข้าศึกษาต่อมหาวิทยาลัยอุบลราชธานี</p>
+                </Box>
+              </Flex>
+              <Flex></Flex>
 
-            {/* ---------------------------Submit-------------------------- */}
+              {/* --------------------------------------register------------------ */}
 
-            <Flex className="contentsHome">
-              <Button
-                className="ant-btn-primary"
-                style={{
-                  fontSize: "18px",
-                  borderRadius: "5px",
-                  padding: "0px 20px 0px 20px",
-                  cursor: "pointer",
-                }}
-                onClick={() => router.replace("/qDisplay")}
-              >
-                ยืนยันการลงทะเบียน
-              </Button>
-            </Flex>
-          </div>
+              <div className="site-content">
+                <Flex className="contentsHome" style={{ margin: 20 }}>
+                  <p className="font-regist" style={{ fontSize: "24px" }}>
+                    ลงทะเบียน
+                  </p>
+                </Flex>
+
+                <Flex flexDirection="column">
+                  <Flex className="contentsHome">
+                    <p style={{ fontSize: "18px" }}>ลงทะเบียนด้วยสถานะ</p>
+                  </Flex>
+                  <Flex className="contentsHome">
+                    <Select
+                      size="large"
+                      style={{ width: 220 }}
+                      defaultValue={roleData[0]}
+                      onChange={handleRoleChange}
+                    >
+                      {roleData.map((value) => (
+                        <Option key={value}>{value}</Option>
+                      ))}
+                    </Select>
+                  </Flex>
+                </Flex>
+
+                <Flex style={{ margin: "40px 0px -20px 20px" }}>
+                  <Col md={{ span: 24 }} lg={{ span: 12 }}>
+                    <Flex className="input-regist" justifyContent="end">
+                      <Form.Item name="email">
+                        <Box>
+                          <p
+                            className="font-regist"
+                            style={{ color: "#4B4B4B" }}
+                          >
+                            {session?.user.email}
+                          </p>
+                        </Box>
+                      </Form.Item>
+                    </Flex>
+                  </Col>
+                  <Col md={{ span: 24 }} lg={{ span: 12 }}>
+                    <Flex
+                      className="input-regist"
+                      justifyContent="start"
+                      style={{ marginLeft: "40px" }}
+                    >
+                      <Form.Item name="authname">
+                        <Box>
+                          <p
+                            className="font-regist"
+                            style={{ color: "#4B4B4B" }}
+                          >
+                            {session?.user.name}
+                          </p>
+                        </Box>
+                      </Form.Item>
+                    </Flex>
+                  </Col>
+                </Flex>
+                
+
+                {/* reder components */}
+
+                {role === roleData[1] ? (
+                  <Flex className="registerCompo">
+                    <TeacherForm />
+                  </Flex>
+                ) : (
+                  <Flex className="registerCompo">
+                    <StudentForm />
+                  </Flex>
+                )}
+              </div>
+            </Col>
+          </Row>
         </div>
       </Landing>
     </>

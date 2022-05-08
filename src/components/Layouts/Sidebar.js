@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu, Breadcrumb } from "antd";
-import { UserOutlined, SettingOutlined } from "@ant-design/icons";
+import { HomeOutlined, SettingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 
 const { SubMenu } = Menu;
@@ -12,11 +12,10 @@ function Sidebar() {
 
   return (
     <>
-      <Layout>
+      <Layout style={{height:"100vh"}}>
         <Sider
           className="sidebar"
-          width={200}
-          style={{ backgroundColor: "#fff" }}
+          style={{ backgroundColor: "#fff",height:"100vh"}}
         >
           <Menu
             mode="inline"
@@ -26,8 +25,8 @@ function Sidebar() {
               paddingTop: 20,
             }}
           >
-            <SubMenu key="sub1" icon={<UserOutlined />} title="ข้อมูลสัมภาษณ์">
-              <Menu.Item key="1" onClick={() => router.replace("/dashboard")}>ข้อมูลสัมภาษณ์</Menu.Item>
+            <SubMenu key="sub1" icon={<HomeOutlined />} title="หน้าแรก">
+              <Menu.Item key="1" onClick={() => router.replace("/")}>ข้อมูลสัมภาษณ์</Menu.Item>
               <Menu.Item key="2" onClick={() => router.replace("/dashboard/interviews")}>คิวสัมภาษณ์</Menu.Item>
             </SubMenu>
 

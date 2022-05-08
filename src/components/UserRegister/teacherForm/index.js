@@ -1,23 +1,27 @@
 import { React, useState, useEffect } from "react";
-import Layouts from "../../components/Layouts";
-import { Box, Flex } from "reflexbox";
-import { Input, Menu, Dropdown, Button, Form, Select } from "antd";
+import { useRouter } from "next/router";
+import { Flex, Box } from "reflexbox";
+import { Input, Button, Row, Col, Select } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { useSession } from "next-auth/react";
 
-import { register_Teacher } from "../api";
+import { register_Users } from "../../../pages/api";
 
 const { TextArea } = Input;
 
-function Dashboard() {
-  const [userdata, setUserdata] = useState();
-
+function TeacherForm() {
+  const router = useRouter();
+  const [authdata, setAuthdata] = useState();
+  
   useEffect(() => {
-    const item = JSON.parse(localStorage.getItem("userData"));
+    const items = JSON.parse(localStorage.getItem("eventdata"));
     // console.log(item)
-    if (item) {
-      setUserdata(item);
+    if (items) {
+      setEventData(items);
     }
   }, []);
+  const [eventdata, setEventData] = useState()
+
 
   const { Option } = Select;
   const facultyData = [
@@ -117,22 +121,33 @@ function Dashboard() {
     setMajorDat(value);
   };
 
+  const { data: session } = useSession();
+
+
   const handleRegister = async () => {
     const payLoad = {
-      email: userdata?.email,
-      name: userdata?.name,
-      full_name: fullname,
+      email: session?.user.email,
+      username: session?.user.name,
+      fullName: fullname,
       phone: phone,
+      role: "teacher",
       faculty: facultys,
       majors: majorDat,
       description: description,
     };
     console.log(payLoad);
+    const requrl = eventdata.requrl;
+
 
     try {
-      await register_Teacher(payLoad).then((respones) => {
-        if (respones.status == 200) {
-          console.log("respone ===>", respones);
+      await register_Users(payLoad).then((response) => {
+        if (response.status == 201) {
+          console.log("respone ===>", response);
+          localStorage.setItem("userId", response.data?.userId)
+          localStorage.setItem("userRole", payLoad.role)
+          setTimeout(() => {
+            window.location.replace("/event/" + requrl)
+          }, 1000);
         }
       });
     } catch (error) {
@@ -141,161 +156,127 @@ function Dashboard() {
   };
 
   return (
-    <>
-      <Layouts>
-        <Flex className="contentsHome" style={{ margin: 20 }}>
-          <h2 style={{ fontSize: "24px" }}>อาจารย์ผู้สอบสัมภาษณ์</h2>
+    <Row>
+      <Flex flexDirection="column">
+        <Flex>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex className="input-regist" justifyContent="end">
+              <Box>
+                <p className="font-regist">ชื่อ-นามสกุล </p>
+              </Box>
+              <Box>
+                <Input
+                  style={{ width: 200 }}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+              </Box>
+            </Flex>
+          </Col>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex
+              className="input-regist"
+              justifyContent="start"
+              style={{ marginLeft: "40px" }}
+            >
+              <Box width={1 / 2}>
+                <p className="font-regist">เบอร์โทรศัพท์ </p>
+              </Box>
+              <Box>
+                <Input
+                  style={{ width: 200 }}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </Box>
+            </Flex>
+          </Col>
         </Flex>
-
-        <Flex flexDirection="column">
-          <Form name="regist_Queue">
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Form.Item name="email">
-                    <Box>
-                      <p className="font-regist" style={{ color: "#4B4B4B" }}>
-                        {userdata?.email}
-                      </p>
-                    </Box>
-                  </Form.Item>
-                </Flex>
+        <Flex>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex className="input-regist" justifyContent="end">
+              <Box>
+                <p className="font-regist">คณะ </p>
               </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
+              <Box>
+                <Select
+                  size="large"
+                  style={{ width: 200 }}
+                  defaultValue={facultyData[0]}
+                  onChange={handleFacultyChange}
                 >
-                  <Form.Item name="authname">
-                    <Box>
-                      <p className="font-regist" style={{ color: "#4B4B4B" }}>
-                        {userdata?.name}
-                      </p>
-                    </Box>
-                  </Form.Item>
-                </Flex>
+                  {facultyData.map((faculty) => (
+                    <Option key={faculty}>{faculty}</Option>
+                  ))}
+                </Select>
               </Box>
             </Flex>
-
-            <Flex>
+          </Col>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex
+              className="input-regist"
+              justifyContent="start"
+              style={{ marginLeft: "40px" }}
+            >
               <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">ชื่อ-นามสกุล </p>
-                  </Box>
-                  <Form.Item name="full_name">
-                    <Box>
-                      <Input onChange={(e) => setFullname(e.target.value)} />
-                    </Box>
-                  </Form.Item>
-                </Flex>
+                <p className="font-regist">สาขาวิชา </p>
               </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
+              <Box>
+                <Select
+                  size="large"
+                  style={{ width: 200 }}
+                  value={majorDat}
+                  onChange={onMajorChange}
                 >
-                  <Box>
-                    <p className="font-regist">เบอร์โทรศัพท์ </p>
-                  </Box>
-                  <Form.Item name="phone">
-                    <Box>
-                      <Input onChange={(e) => setPhone(e.target.value)} />
-                    </Box>
-                  </Form.Item>
-                </Flex>
+                  {faculties.map((major) => (
+                    <Option key={major}>{major}</Option>
+                  ))}
+                </Select>
               </Box>
             </Flex>
-
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <Box>
-                    <p className="font-regist">คณะ </p>
-                  </Box>
-                  <Form.Item name="faculty">
-                    <Select
-                      size="middle"
-                      style={{ width: 220 }}
-                      defaultValue={facultyData[0]}
-                      onChange={handleFacultyChange}
-                    >
-                      {facultyData.map((faculty) => (
-                        <Option key={faculty}>{faculty}</Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Flex>
-              </Box>
-              <Box width={1 / 2}>
-                <Flex
-                  className="input-regist"
-                  justifyContent="start"
-                  style={{ marginLeft: "40px" }}
-                >
-                  <Box>
-                    <Flex className="input-regist" justifyContent="end">
-                      <Box>
-                        <p className="font-regist">สาขาวิชา </p>
-                      </Box>
-                      <Form.Item>
-                        <Select
-                          size="middle"
-                          style={{ width: 220 }}
-                          value={majorDat}
-                          onChange={onMajorChange}
-                        >
-                          {faculties.map((major) => (
-                            <Option key={major}>{major}</Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </Flex>
-                  </Box>
-                </Flex>
-              </Box>
+          </Col>
+        </Flex>
+        <Flex>
+          <Col span={24}>
+            <Flex className="input-regist" justifyContent="center">
+              <p className="font-regist">นัดหมายสัมภาษณ์ </p>
             </Flex>
-            <Flex>
-              <Box width={1 / 2}>
-                <Flex className="input-regist" justifyContent="end">
-                  <p className="font-regist">นัดหมายสัมภาษณ์ </p>
-                  <Form.Item name="description">
-                    <Flex>
-                      <TextArea
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={4}
-                        placeholder="สามารถวางลิงก์ได้"
-                      ></TextArea>
-                    </Flex>
-                  </Form.Item>
-                </Flex>
-              </Box>
+          </Col>
+        </Flex>
+        <Flex>
+          <Col span={24}>
+            <Flex className="input-regist" justifyContent="end">
+              <TextArea
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                style={{marginLeft:50}}
+                placeholder="สามารถวางลิงก์ได้"
+              ></TextArea>
             </Flex>
-          </Form>
+          </Col>
         </Flex>
 
         {/* ---------------------------Submit-------------------------- */}
 
-        <Flex className="contentsHome">
-          <Button
-            htmlType="submit"
-            className="btn-teacher-save"
-            style={{
-              fontSize: "24px",
-              padding: "0px 50px 35px 50px",
-              marginTop: 50,
-              borderRadius: "5px",
-            }}
-            onClick={() => handleRegister()}
-          >
-            บันทึก
-          </Button>
-        </Flex>
-      </Layouts>
-    </>
+        <Col span={24}>
+          <Flex className="contentsHome">
+            <Button
+              htmlType="submit"
+              className="ant-btn-primary"
+              style={{
+                fontSize: "18px",
+                borderRadius: "5px",
+                padding: "0px 20px 0px 20px",
+                cursor: "pointer",
+                marginTop: 30,
+              }}
+              onClick={() => handleRegister()}
+            >
+              ยืนยันการลงทะเบียน
+            </Button>
+          </Flex>
+        </Col>
+      </Flex>
+    </Row>
   );
 }
 
-export default Dashboard;
+export default TeacherForm;

@@ -1,67 +1,44 @@
-import { Button, Carousel, Image } from "antd";
+import { React, useEffect, useState } from "react";
+import { Button, Col, Input, Row } from "antd";
 import { Box, Flex } from "reflexbox";
 import { useRouter } from "next/router";
-import Landing from "../components/LayoutsLanding";
+
+import Layouts from "../components/Layouts";
+import ModalEvent from "../components/CreateEvent";
+import EventCard from "../components/EventCard";
 
 export default function Home() {
-  const router = useRouter();
 
   return (
     <>
-      <Landing>
-        <div className="container">
-          <Flex>
-            <Box
-              width={1 / 2}
-              style={{
-                padding: "10px 10px 0px 20px",
-                fontSize: "24px",
-                color: "#4B4B4B",
-              }}
-            >
-              <p>งานสัมภาษณ์เข้าศึกษาต่อมหาวิทยาลัยอุบลราชธานี</p>
-            </Box>
-            <Box width={1 / 2}>
-              <Flex justifyContent="end">
-                <Button
-                  className="btn-login-google"
+      <Layouts>
+        <Row >
+          <Col span={24}>
+            <div className="container">
+              <Flex>
+                <Col
                   style={{
-                    fontSize: "16px",
-                    padding: "0px 40px 0px 40px",
-                    alignItems: "center",
+                    margin: 10,
+                    fontSize: "20px",
+                    color: "#4B4B4B",
                   }}
-                  onClick={() => router.replace("/dashboard")}
                 >
-                   Dashboard
-                </Button>
+                  <p>งานสัมภาษณ์เข้าศึกษาต่อมหาวิทยาลัยอุบลราชธานี</p>
+                </Col>
               </Flex>
-            </Box>
-          </Flex>
-          <Flex className="contentsHome">
-            <Carousel autoplay>
-              <img src="/assets/adds/admiss-01.jpg" />
-            </Carousel>
-          </Flex>
-          <Flex
-            className="contentsHome"
-            style={{ marginTop: 50}}
-          >
-            <Button
-              className="ant-btn-primary"
-              style={{
-                fontSize: "24px",
-                padding: "0px 40px 40px 40px",
-                marginBottom: 80,
-                alignItems: "center",
-                borderRadius: "10px",
-              }}
-              onClick={() => router.replace("/registers")}
-            >
-              ลงทะเบียน
-            </Button>
-          </Flex>
-        </div>
-      </Landing>
+              {/* con tentCard Event */}
+
+              <Flex className="contentsHome">
+                <EventCard />
+              </Flex>
+              {/* Button Create */}
+              <Flex className="contentsHome">
+                <ModalEvent />
+              </Flex>
+            </div>
+          </Col>
+        </Row>
+      </Layouts>
     </>
   );
 }

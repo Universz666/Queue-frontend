@@ -14,7 +14,7 @@ function Layouts({ children }) {
       <Flex flexWrap="nowrap">
         <Sidebar />
         <Flex flexDirection="column" width="100%" style={{ backgroundColor: "#F6F6F6" }}>
-          <main style={{ minHeight: "calc(100vh - 75px)", padding:"30px 30px 30px 50px", backgroundColor: "#FFF" }}>{children}</main>
+          <main style={{ minHeight: "calc(100vh - 75px)", padding:"30px 30px 30px 50px", backgroundColor: "#F6F6F6" }}>{children}</main>
         </Flex>
       </Flex>
     </Flex>

@@ -21,7 +21,7 @@ function CompInterview() {
               <p> Portfolio : </p>
             </Box>
             <Box style={{ paddingLeft: 5 }}>
-              <p>Jamess.pdf</p>
+              <a>Jamess.pdf</a>
             </Box>
           </Flex>
         </Box>
