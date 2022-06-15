@@ -34,3 +34,45 @@ export function join_Event(payLoad) {
     .then((respone) => respone)
     .catch((error) => console.log(error));
 }
+
+export function result_Interview(payLoad) {
+  return axios
+    .post("http://localhost:8000/api/v1/updateResult-student", payLoad)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}
+
+export function update_status(payLoad) {
+  return axios
+    .post("http://localhost:8000/api/v1/update-userStatus", payLoad)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}
+
+export function status_teacher_wait(teacherId) {
+  return axios
+    .post("http://localhost:8000/api/v1/update-teacherStatus", teacherId)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}
+
+export function update_data(payLoad) {
+  return axios
+    .post("http://localhost:8000/api/v1/update-user", payLoad)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}
+
+export function update_role(payLoad) {
+  return axios
+    .post("http://localhost:8000/api/v1/updata_role", payLoad)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}
+
+export function delete_user(payLoad) {
+  return axios
+    .post("http://localhost:8000/api/v1/delete_user", payLoad)
+    .then((respone) => respone)
+    .catch((error) => console.log(error));
+}

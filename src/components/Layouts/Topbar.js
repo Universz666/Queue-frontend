@@ -18,6 +18,7 @@ import {
   UserOutlined,
   SettingOutlined,
   LoginOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import { Flex, Box } from "reflexbox";
 import styled from "@emotion/styled";
@@ -101,7 +102,6 @@ export default function Topbar() {
   const { Text, Link } = Typography;
 
   const { data: session } = useSession();
- 
 
   useEffect(() => {
     if (session) {
@@ -140,6 +140,7 @@ export default function Topbar() {
       window.location.reload();
     }, 500);
   }
+  
 
   return (
     <>
@@ -148,7 +149,7 @@ export default function Topbar() {
           <Box width={1 / 2}>
             <Flex
               style={{ cursor: "pointer" }}
-              onClick={() => router.replace("/")}
+              onClick={() => router.reload()}
             >
               <img
                 src="/assets/Logoubu.png"
@@ -318,21 +319,12 @@ export default function Topbar() {
                 <p>{userdata?.email}</p>
               </Flex>
               <Flex>
-                <a onClick={() => router.replace("/dashboard")}>
+                <a onClick={() => router.push("/profile")}>
                   {" "}
-                  <UserOutlined
+                  <EditOutlined
                     style={{ padding: "10px 10px", marginLeft: 50 }}
                   />
-                  Dashboard
-                </a>
-              </Flex>
-              <Flex>
-                <a onClick={() => router.replace("/dashboard/admin-dashboard")}>
-                  {" "}
-                  <SettingOutlined
-                    style={{ padding: "10px 10px", marginLeft: 50 }}
-                  />
-                  Admin Dashboard
+                  แก้ไขข้อมูลส่วนตัว
                 </a>
               </Flex>
               <Flex>
@@ -354,21 +346,12 @@ export default function Topbar() {
                 <p>{session?.user.email}</p>
               </Flex>
               <Flex>
-                <a onClick={() => router.replace("/dashboard")}>
+                <a onClick={() => router.push("/profile")}>
                   {" "}
-                  <UserOutlined
+                  <EditOutlined
                     style={{ padding: "10px 10px", marginLeft: 50 }}
                   />
-                  Dashboard
-                </a>
-              </Flex>
-              <Flex>
-                <a onClick={() => router.replace("/dashboard/admin-dashboard")}>
-                  {" "}
-                  <SettingOutlined
-                    style={{ padding: "10px 10px", marginLeft: 50 }}
-                  />
-                  Admin Dashboard
+                  แก้ไขข้อมูลส่วนตัว
                 </a>
               </Flex>
               <Flex>
@@ -390,7 +373,7 @@ export default function Topbar() {
                 <p>{userdata?.email}</p>
               </Flex>
               <Flex>
-                <a onClick={() => router.replace("/dashboard")}>
+                <a onClick={() => router.push("/dashboard")}>
                   {" "}
                   <UserOutlined
                     style={{ padding: "10px 10px", marginLeft: 50 }}
@@ -399,7 +382,7 @@ export default function Topbar() {
                 </a>
               </Flex>
               <Flex>
-                <a onClick={() => router.replace("/dashboard/admin-dashboard")}>
+                <a onClick={() => router.push("/dashboard/admin-dashboard")}>
                   {" "}
                   <SettingOutlined
                     style={{ padding: "10px 10px", marginLeft: 50 }}

@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Box, Flex } from "reflexbox";
-import { Col, Form, Row, Select, Input, Button, Modal } from "antd";
+import { Col, Form, Row, Select } from "antd";
 
 import { useSession } from "next-auth/react";
 
@@ -13,8 +13,6 @@ import TeacherForm from "../../components/UserRegister/teacherForm";
 function RegisterDesktop() {
   const router = useRouter();
 
-
-
   const { Option } = Select;
 
   const [authdata, setAuthdata] = useState();
@@ -24,15 +22,6 @@ function RegisterDesktop() {
   const handleRoleChange = (value) => {
     setRole(value);
   };
-  // console.log(role);
-
-  // useEffect(() => {
-  //   const item = JSON.parse(sessionStorage.getItem("authdata"));
-  //   // console.log(item)
-  //   if (item) {
-  //     setAuthdata(item);
-  //   }
-  // }, );
 
   const { data: session } = useSession();
   useEffect(() => {
@@ -59,7 +48,6 @@ function RegisterDesktop() {
                   <p>งานสัมภาษณ์เข้าศึกษาต่อมหาวิทยาลัยอุบลราชธานี</p>
                 </Box>
               </Flex>
-              <Flex></Flex>
 
               {/* --------------------------------------register------------------ */}
 

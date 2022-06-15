@@ -1,12 +1,17 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, Row, Divider } from "antd";
 import { React, useState } from "react";
 import { Flex, Box } from "reflexbox";
 import { CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+import Router from "next/router";
+
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import useSWR from "swr";
 import Link from "next/link";
 
 function EventCard() {
+  const copyUrl = `http://localhost:3000/event/`;
+  const [requrl, setRequrl] = useState("");
 
   const url = "http://localhost:8000/api/v1/eventInterview";
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -22,10 +27,7 @@ function EventCard() {
       eventArray.push(data?.detail[i]);
     }
   }
-  console.log(data);
-
-  
-
+  console.log(eventArray);
 
   return (
     <>
@@ -33,7 +35,7 @@ function EventCard() {
         <div className="site-card-border-less-wrapper">
           <Row justify="space-between">
             {eventArray.map((eventdata) => (
-              <Col 
+              <Col
                 xs={{ span: 24 }}
                 ms={{ span: 24 }}
                 md={{ span: 12 }}
@@ -44,19 +46,43 @@ function EventCard() {
                 <Card
                   key={eventdata}
                   bodyStyle={{ width: 300, height: 200 }}
-                  style={{ marginTop: 20, margin:5 }}
+                  style={{ marginTop: 20, margin: 5 }}
                   bordered={true}
                   title={eventdata.title}
                   actions={[
-                    <CopyOutlined key="setting" />,
+                    <CopyOutlined key="copy" />,
                     <EllipsisOutlined key="ellipsis" />,
                   ]}
                 >
                   <p>{eventdata.faculty}</p>
                   <p>{eventdata.major}</p>
-                  <Link href='/event/[id]' as={'/event/'+ eventdata.requrl}>
-                  <a>{eventdata.requrl}</a>
+                  <Link href="/event/[id]" as={"/event/" + eventdata.requrl}>
+                    <a>{eventdata.requrl}</a>
                   </Link>
+                  <Flex>
+                    <Box width={1 / 2}>
+                      <CopyToClipboard>
+                        <Button>
+                          <CopyOutlined />
+                        </Button>
+                      </CopyToClipboard>
+                    </Box>
+                    <Box width={2 / 2}>
+                      <Button
+                        onClick={() =>
+                          Router.push({
+                            pathname: "/dashboard/interview-dashboard",
+                            query: {
+                              eventId: eventdata?.id,
+                              requrl: eventdata?.requrl,
+                            },
+                          })
+                        }
+                      >
+                        setting
+                      </Button>
+                    </Box>
+                  </Flex>
                 </Card>
               </Col>
             ))}

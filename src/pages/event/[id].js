@@ -1,21 +1,15 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import { join_Event } from "../api";
 import Landing from "../../components/LayoutsLanding";
 import { Flex } from "reflexbox";
+
 
 const Post = (props) => {
   const router = useRouter();
   const [post, setPost] = useState({});
   const [userdata, setUserdata] = useState();
-
-  // useEffect(async () => {
-  //   const item = await JSON.parse(localStorage.getItem("userData"));
-  //   if (item) {
-  //     setUserdata(item);
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (props) {
@@ -31,7 +25,6 @@ const Post = (props) => {
         localStorage.setItem("eventdata", JSON.stringify(response.detail));
       });
   };
-  //   console.log(post);
 
   const date = new Date(post.startDate);
 
@@ -41,15 +34,15 @@ const Post = (props) => {
       registerEvent(userdata);
       if (userdata?.role == "student") {
         setTimeout(() => {
-          router.replace("/qDisplay");
+          router.push("/qDisplay");
         }, 600);
       } else if (userdata?.role == "teacher") {
         setTimeout(() => {
-          router.replace("/dashboard/interviews");
+          router.push("/dashboard/interviews");
         }, 600);
       }
     } else {
-      router.replace("/registers");
+      router.push("/registers");
     }
   }
   console.log(userdata?.role);

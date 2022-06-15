@@ -108,6 +108,15 @@ body {
   border-color: #6BD716 !important;
 }
 
+.btn-line-success{
+  color: #6BD716;
+  border-color: #6BD716;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #6BD716 !important;
+  border-color: #6BD716 !important;
+}
+
 .input-box-login{
   display: flex;
   align-items: center;
@@ -136,6 +145,7 @@ body {
 }
 
 
+
 .txt-q{
   font-size: 48px;
   font-weight: bold;
@@ -153,8 +163,42 @@ body {
     border-color: #4CAF50 !important;
 }
 
+.btn-teacher-no{
+  color: #4B4B4B;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #4B4B4B !important;
+}
+
 .card-event-compo{
   text-align: center;
   width: 300px;
   height: 250px;
+}
+
+.btn-accept{
+  color: #4CAF50;
+  border-color: #4CAF50;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #4CAF50 !important;
+  border-color: #4CAF50 !important;
+}
+
+.btn-decline {
+  color: #af4c4c;
+  border-color: #af4c4c;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #af4c4c !important;
+  border-color: #af4c4c !important;
+}
+
+.btn-disable{
+  color: #4B4B4B;
+  border-color: #4B4B4B;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  color: #4B4B4B !important;
+  border-color: #4B4B4B !important;
 }

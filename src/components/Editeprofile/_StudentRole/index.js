@@ -1,27 +1,50 @@
 import { React, useState, useEffect } from "react";
 import { Flex, Box } from "reflexbox";
 import { Input, Button, message, Select, Row, Col } from "antd";
-import { useSession } from "next-auth/react";
-
-import { register_Users } from "../../../pages/api";
+import { NotificationOutlined } from "@ant-design/icons";
+import axios from "axios";
 import Link from "next/link";
 
-function StudentForm() {
+import { useRouter } from "next/router";
+import { update_data } from "../../../pages/api";
+
+export default function _StudentRole() {
+  const router = useRouter();
+
+  const [userData, setUserData] = useState();
+  const [userInfo, setUserInfo] = useState();
+
   const [provincedata, setProvinceData] = useState(null);
+
+  const [username, setUsername] = useState();
   const [filename, setFilename] = useState();
   const [fullname, setFullname] = useState("");
   const [school, setSchool] = useState("");
   const [phone, setPhone] = useState("");
   const [province, setProvince] = useState();
 
-  useEffect(() => {
-    const item = JSON.parse(localStorage.getItem("eventdata"));
-    // console.log(item)
+  useEffect(async () => {
+    const item = JSON.parse(localStorage.getItem("userData"));
     if (item) {
-      setEventData(item);
+      setUserData(item);
+      axios
+        .get(
+          `http://localhost:8000/api/v1/userInfo-role?id=${item?.id}&role=${item?.role}`
+        )
+        .then((response) => {
+          if (response) {
+            console.log("response ==>", response.data.result);
+            setUserInfo(response.data.result);
+            setFilename(response.data.result.file);
+            setFullname(response.data.result.fullName);
+            setPhone(response.data.result.phone);
+            setProvince(response.data.result.province);
+            setSchool(response.data.result.school);
+            setUsername(response.data.result.username);
+          }
+        });
     }
   }, []);
-  const [eventdata, setEventData] = useState();
 
   useEffect(() => {
     fetch("https://thaiaddressapi-thaikub.herokuapp.com/v1/thailand/provinces")
@@ -30,8 +53,6 @@ function StudentForm() {
         setProvinceData(data.data);
       });
   }, []);
-
-  const { data: session } = useSession();
 
   const provinceArray = [];
   if (provincedata) {
@@ -45,26 +66,25 @@ function StudentForm() {
     setProvince(value);
   };
 
-  const handleRegister = async () => {
+  const handleSubmit = async () => {
     const payLoad = {
-      email: session?.user.email,
-      username: session?.user.name,
+      id: userData?.id,
+      email: userData?.email,
+      username: username,
       fullName: fullname,
-      role: "student",
       phone: phone,
+      role: "student",
       school: school,
       province: province,
       file: filename,
     };
     console.log(payLoad);
-    const requrl = eventdata.requrl;
 
     try {
-      await register_Users(payLoad).then((respones) => {
-        if (respones.status == 201) {
-          console.log("respone ===>", respones);
-          // router.replace("/event/" + requrl);
-          window.location.replace("/event/" + requrl);
+      await update_data(payLoad).then((response) => {
+        if (response) {
+          console.log("respone ==>", response);
+          localStorage.setItem("userData", response.data?.result);
         }
       });
     } catch (error) {
@@ -79,11 +99,42 @@ function StudentForm() {
           <Col md={{ span: 24 }} lg={{ span: 12 }}>
             <Flex className="input-regist" justifyContent="end">
               <Box>
+                <></>
+              </Box>
+              <Box>
+                <p className="font-regist">{userData?.email}</p>
+              </Box>
+            </Flex>
+          </Col>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex
+              className="input-regist"
+              justifyContent="start"
+              style={{ marginLeft: "40px" }}
+            >
+              <Box>
+                <p className="font-regist">username</p>
+              </Box>
+              <Box>
+                <Input
+                  style={{ width: "180px" }}
+                  placeholder={userData?.username}
+                  onChange={(e) => setSchool(e.target.value)}
+                />
+              </Box>
+            </Flex>
+          </Col>
+        </Flex>
+        <Flex>
+          <Col md={{ span: 24 }} lg={{ span: 12 }}>
+            <Flex className="input-regist" justifyContent="end">
+              <Box>
                 <p className="font-regist">ชื่อ-นามสกุล </p>
               </Box>
               <Box>
                 <Input
                   style={{ width: "200px" }}
+                  placeholder={userData?.fullName}
                   onChange={(e) => setFullname(e.target.value)}
                 />
               </Box>
@@ -101,6 +152,7 @@ function StudentForm() {
               <Box>
                 <Input
                   style={{ width: "200px" }}
+                  placeholder={userInfo?.school}
                   onChange={(e) => setSchool(e.target.value)}
                 />
               </Box>
@@ -116,6 +168,7 @@ function StudentForm() {
               <Box>
                 <Input
                   style={{ width: "200px" }}
+                  placeholder={userData?.phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </Box>
@@ -133,7 +186,7 @@ function StudentForm() {
               <Box>
                 <Input
                   style={{ width: "200px" }}
-                  placeholder="** ใส่หรือไม่ใส่ก็ได้"
+                  placeholder={userInfo?.file}
                   onChange={(e) => setFilename(e.target.value)}
                 />
               </Box>
@@ -151,7 +204,7 @@ function StudentForm() {
                   showSearch
                   onChange={provinceChange}
                   style={{ width: "200px" }}
-                  placeholder="จังหวัด"
+                  placeholder={userInfo?.province}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     option.children
@@ -171,17 +224,6 @@ function StudentForm() {
               </Box>
             </Flex>
           </Col>
-          <Col md={{ span: 24 }} lg={{ span: 12 }}>
-            <Flex
-              className="input-regist"
-              justifyContent="start"
-              style={{ marginLeft: "40px" }}
-            >
-              <Box>
-                <></>
-              </Box>
-            </Flex>
-          </Col>
         </Flex>
 
         {/* ---------------------------Submit-------------------------- */}
@@ -196,9 +238,9 @@ function StudentForm() {
                 padding: "0px 20px 0px 20px",
                 cursor: "pointer",
               }}
-              onClick={() => handleRegister()}
+              onClick={() => handleSubmit()}
             >
-              ยืนยันการลงทะเบียน
+              บันทึกการเปลี่ยนแปลง
             </Button>
           </Flex>
         </Col>
@@ -206,5 +248,3 @@ function StudentForm() {
     </Row>
   );
 }
-
-export default StudentForm;
