@@ -33,7 +33,7 @@ export default function interviewDashboard() {
       data_all.push(data?.detail[i]);
     }
   }
-  console.log(data_all);
+  console.log(data);
 
   const columns = [
     {
@@ -93,7 +93,7 @@ export default function interviewDashboard() {
               color: "#4B4B4B",
             }}
           >
-            <p>{data.detail[0].title}</p>
+            {/* <p>{data.detail[0].title}</p> */}
           </Row>
           <Row justify="center" style={{ margin: 10 }}>
             <CSVLink {...csvReport}>

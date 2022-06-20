@@ -11,7 +11,8 @@ import Link from "next/link";
 
 function EventCard() {
   const copyUrl = `http://localhost:3000/event/`;
-  const [requrl, setRequrl] = useState("");
+
+
 
   const url = "http://localhost:8000/api/v1/eventInterview";
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -23,11 +24,11 @@ function EventCard() {
   const eventArray = [];
   if (data) {
     for (let i = 0; i < data?.detail.length; i++) {
-      //   console.log(data?.detail)
       eventArray.push(data?.detail[i]);
     }
   }
-  console.log(eventArray);
+
+
 
   return (
     <>
@@ -49,19 +50,12 @@ function EventCard() {
                   style={{ marginTop: 20, margin: 5 }}
                   bordered={true}
                   title={eventdata.title}
-                  actions={[
-                    <CopyOutlined key="copy" />,
-                    <EllipsisOutlined key="ellipsis" />,
-                  ]}
                 >
                   <p>{eventdata.faculty}</p>
                   <p>{eventdata.major}</p>
-                  <Link href="/event/[id]" as={"/event/" + eventdata.requrl}>
-                    <a>{eventdata.requrl}</a>
-                  </Link>
                   <Flex>
                     <Box width={1 / 2}>
-                      <CopyToClipboard>
+                      <CopyToClipboard text={copyUrl+eventdata.requrl}>
                         <Button>
                           <CopyOutlined />
                         </Button>
